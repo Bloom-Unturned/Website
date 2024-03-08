@@ -1,0 +1,139 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- RowReorder CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- RowReorder JS -->
+    <script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+
+    <!-- Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<style>
+#loading-spinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+</style>
+<div id="loading-spinner"></div>
+
+<div id="content" style="display: none;" class="container-fluid">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Players</li>
+        </ol>
+      </nav>
+	<div class="row">
+		<div class="col-md-12">
+            <div class="table-responsive">
+			<table id= "myTable" class="table table-striped table-dark table-hover table-responsive">
+
+				<thead>
+					<th scope="col">PlayerName</th>
+					<th scope="col">Zombies</th>
+					<th scope="col">Messages</th>
+					<th scope="col">Deaths</th>
+					<th scope="col">Headshots</th>
+					<th scope="col">Kills</th>
+					<th scope="col">MegaZombies</th>
+					<th scope="col">Resources</th>
+					<th scope="col">Harvests</th>
+					<th scope="col">Fish</th>
+					<th scope="col">Animals</th>
+				  </tr>
+				</thead>
+				<tbody>
+				</tbody>
+			  </table>
+            </div>
+		</div>
+	</div>
+
+</div>
+<script>
+$(document).ready(function () {
+    // Show loading spinner
+    $("#loading-spinner").show();
+
+    var dataTable = $('#myTable').DataTable({
+        // Your DataTable initialization settings
+        responsive: true,
+        columns: [
+            { 
+                data: 'PlayerID', 
+                title: 'Player Name',
+                render: function(data, type, row) {
+                    return '<a href="https://steamcommunity.com/profiles/' + data + '" target="_blank">' + row.PlayerName + '</a>';
+                }
+            },
+            { data: 'Zombies', title: 'Zombies' },
+            { data: 'Messages', title: 'Messages' },
+            { data: 'Deaths', title: 'Deaths' },
+            { data: 'Headshots', title: 'Headshots' },
+            { data: 'Kills', title: 'Kills' },
+            { data: 'MegaZombies', title: 'Mega Zombies' },
+            { data: 'Resources', title: 'Resources' },
+            { data: 'Harvests', title: 'Harvests' },
+            { data: 'Fish', title: 'Fish' },
+            { data: 'Animals', title: 'Animals' }
+        ],
+        order: [[5, 'desc']]
+    });
+
+    // Event handler for row click
+    $('#myTable tbody').on('click', 'tr', function () {
+        var rowData = dataTable.row(this).data();
+
+        // Check if rowData is not undefined
+        if (rowData) {
+            // Log rowData to the console (you can replace this with your logic)
+            console.log('Clicked Row Data:', rowData);
+
+            window.location.href = 'https://bloomnetwork.online/Players/' + rowData.PlayerID;
+        }
+    });
+
+    $.ajax({
+        url: 'https://api.bloomnetwork.online/Players',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Hide loading spinner
+            $("#loading-spinner").hide();
+
+            // Show content
+            $("#content").show();
+
+            // Populate DataTable with the fetched data
+            dataTable.clear().rows.add(data.result).draw();
+        },
+        error: function (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+});
+</script>
+
+	</script>

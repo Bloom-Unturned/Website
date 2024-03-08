@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Information and DataTables</title>
+  <!-- Add Bootstrap CSS link -->
+  <!-- Add DataTables CSS link -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+  <!-- Add Clipboard.js CDN link -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Add your custom styles if needed -->
+  <style>
+    .vertical-divider {
+      border-right: 1px solid #ddd;
+      height: 100%;
+    }
+    .table-container {
+      margin-top: 20px;
+    }
+    .full-width-image-container {
+      width: 100%;
+      height: 100%;
+    }
+    .full-width-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .player-info-card {
+      height: auto; /* Auto height for the card body */
+      display: flex;
+    }
+    .card-body {
+      overflow-y: auto; /* Add scrollbars if the content overflows */
+    }
+    .card-img-col {
+      flex: 0 0 auto; /* Make the image column non-flexible */
+      max-width: 300px; /* Set a maximum width for the image column */
+    }
+    .copy-button {
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 3px 7px;
+      border-radius: 3px;
+      margin-left: 5px;
+    }
+    .fade:not(.active) {
+    display: none;
+}
+  </style>
+</head>
+<body>
+
+  <div class="container mt-3">
+   
+   <nav aria-label="breadcrumb">
+
+        <ol class="breadcrumb">
+
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/items">Items</a></li>
+
+        </ol>
+
+      </nav> 
+
+
+     <div id="neverjoined" style="display: none" class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">This Player has never joined!</h4>
+        <p class="mb-0">Things such as global stats, achievements, and external punishments will still show.</p>
+      </div>
+      <div id="cheating" style="display: none" class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">This Player is cheating!</h4>
+        <p class="mb-0">He was found cheating and banned on </p><p id="wherecheating" class="mb-0">  </p>
+      </div>
+    <div id="itemclass" class="card player-info-card" style="margin-bottom: 10px;">
+      <div class="card-header">
+        <h5 class="card-title"><a id="link" href="https://steamcommunity.com/profiles/<%= item %>" target="_blank">Hath</a></h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 card-img-col">
+            <div class="full-width-image-container">
+              <object data="https://bloomnetwork.online/images/<%= item %>.png" type="image/png" class="img-fluid full-width-image" >
+                <img src="https://bloomnetwork.online/images/nada.png" class="img-fluid full-width-image">
+              </object>
+            </div>
+          </div>
+          <!-- Player Data Table -->
+          <div class="col-md-8">
+            <table class="table table-borderless table-striped">
+                <tr>
+
+                <td><b>Name</b></td>
+
+                <td>                  <span id="name"></span></td></tr>
+              <tr>
+                <td><b>ID</b></td>
+                <td>
+                  <span id="steamId"><%= item %></span>
+                  <button class="copy-button" data-clipboard-target="#steamId">Copy</button>
+                </td>
+              </tr>
+                <tr>
+
+                <td><b>Type</b></td>
+
+                <td>                  <span id="type"></span></td></tr>
+                <tr>
+
+                <td><b>Size</b></td>
+
+                <td>                  <span id="size"></span></td></tr>
+              
+              <!-- Add more rows based on your data -->
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table id= "recipes" class="table table-striped table-dark table-hover table-responsive caption-top">
+          <!--<caption>Recipes.</caption>-->
+          <thead>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive">
+      <table id="dynamicTable" class="table"> <thead> <tr> <!-- Headers will be added dynamically --> </tr> </thead> <tbody> <!-- Table body will be populated dynamically --> </tbody> </table>
+  </div>
+      </div>
+  <!-- Add Bootstrap JS and jQuery links -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Add DataTables JS links -->
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+  <!-- Initialize Clipboard.js -->
+  <script>
+    new ClipboardJS('.copy-button');
+  </script>
+  
+  <script>
+    
+$(document).ready(function () {
+    
+  $.ajax({
+    url: 'https://api.bloomnetwork.online/items/item?item=<%= item %>',
+    method: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        const itemData = Object.values(data.result)[0];
+        const tableBody = $("#dynamicTable tbody");
+        $('#name').text(itemData.Name);
+        $('#type').text(itemData.Type);
+        $('#link').text(itemData.Name);
+        $('#size').text(`${itemData.Size_X} x ${itemData.Size_Y}`);
+        
+        var colors = { "Common": "#1F871F", "Uncommon": "#1F871F", "Rare": "#4B64C8", "Epic": "#964BFA", "Legendary": "#C832FA", "Mythical": "#FA3219" };
+        var card = document.getElementById("itemclass");
+        card.style.borderColor = colors[itemData.Rarity];
+        
+        delete itemData.GUID;
+        delete itemData.Name;
+        delete itemData.Icon;
+        delete itemData.Rarity;
+        delete itemData.Type;
+        delete itemData.Size_Z;
+        delete itemData.Size_X;
+        delete itemData.Size_Y;
+        delete itemData.Useable;
+        
+        const recipes = $('#recipes').DataTable({
+            columns: [
+                { data: 'Recipes', title: 'Recipes' },
+            ],
+            ordering: false,
+            searching: false,
+            paging: false,
+        });
+        
+        for (let i = 0; i < itemData.Blueprints; i++) {
+            const supplies = [];
+            console.log(i);
+            const blueprintSupplies = itemData[`Blueprint_${i}_Supplies`] ?? 1;
+            
+            for (let j = 0; j < blueprintSupplies; j++) {
+                const supplyId = itemData[`Blueprint_${i}_Supply_${j}_ID`];
+                const supplyAmount = itemData[`Blueprint_${i}_Supply_${j}_Amount`] ?? 1;
+                supplies.push(`<a href="https://bloomnetwork.online/Items/${supplyId}" target="_blank"><img src='https://bloomnetwork.online/images/${supplyId}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a> x${supplyAmount}`);
+            }
+            if(itemData[`Blueprint_${i}_Type`]){
+              if(itemData[`Blueprint_${i}_Type`] == "Repair")  supplies.push(`<a href="http://admin.bloomnetwork.online/Items/${itemData.ID}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData.ID}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a> x1`);
+            }
+            if (itemData[`Blueprint_${i}_Tool`]) {
+                supplies.push(`<a href="https://bloomnetwork.online/Items/${itemData[`Blueprint_${i}_Tool`]}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData[`Blueprint_${i}_Tool`]}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a>`);
+            }
+            
+            const bluep = supplies.join(" + ");
+            
+            let product;
+            if (itemData[`Blueprint_${i}_Product`]) {
+              console.log(11)
+                product = `<a href="https://bloomnetwork.online/Items/${itemData[`Blueprint_${i}_Product`]}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData[`Blueprint_${i}_Product`]}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a>  x${itemData[`Blueprint_${i}_Products`] ?? 1}`;
+            } else if(itemData[`Blueprint_${i}_Output_0_ID`]) {
+              console.log(22)
+                product = `<a href="https://bloomnetwork.online/Items/${itemData[`Blueprint_${i}_Output_0_ID`]}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData[`Blueprint_${i}_Output_0_ID`]}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a>  x${itemData[`Blueprint_${i}_Output_0_Amount`] ?? 1}`;
+            }else {
+              product = `<a href="https://bloomnetwork.online/Items/${itemData.ID}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData[`ID`]}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a>  x${itemData[`Blueprint_${i}_Output_0_Amount`] ?? 1}`;
+
+            }
+            
+            console.log(supplies);
+            recipes.row.add({ Recipes: bluep + " = " + product }).draw(false);
+        }
+        delete itemData.ID;
+        for (let key in itemData) {
+            if (key.startsWith("Blueprint") || key.startsWith("Action")) {
+                delete itemData[key];
+            }
+        }
+        $.each(itemData, function(key, value) {
+            tableBody.append("<tr><td><strong>" + key + ":</strong></td><td>" + value + "</td></tr>");
+        });
+    },
+    error: function(error) {
+        console.error('Error fetching data:', error);
+    }
+});
+
+
+ 
+    });
+</script>
+
+</body>
+</html>

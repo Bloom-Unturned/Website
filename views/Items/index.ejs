@@ -1,0 +1,148 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- RowReorder CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- RowReorder JS -->
+    <script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+
+    <!-- Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<style>
+#loading-spinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+</style>
+<div id="loading-spinner"></div>
+
+<div id="content" style="display: none;" class="container-fluid">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Items</li>
+        </ol>
+      </nav>
+	<div class="row">
+		<div class="col-md-12">
+            <div class="table-responsive">
+			<table id= "myTable" class="table table-striped table-dark table-hover table-responsive">
+
+				<thead>
+					<th scope="col">Icon</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">ID</th>
+					<th scope="col">Type</th>
+				  </tr>
+				</thead>
+				<tbody>
+				</tbody>
+			  </table>
+            </div>
+		</div>
+	</div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+      // Show loading spinner
+      $("#loading-spinner").show();
+  
+      // Verify if DataTable script is loaded before initializing
+      if ($.fn.DataTable) {
+        // DataTable is loaded, you can proceed with initialization
+var dataTable = $('#myTable').DataTable({
+    columns: [
+        {
+            data: 'Icon',
+            title: 'Icon',
+            render: function (data, type, row) {
+                // Assuming 'Icon' is the URL of the image
+                return '<object data="' + data + '" type="image/png" style="max-width: 100px; max-height: 50px;" ><img src="https://bloomnetwork.online/images/nada.png" style="max-width: 50px; max-height: 50px;"></object>';
+            }
+        },
+        { data: 'ID', title: 'ID' },
+        {
+            data: 'Name',
+            title: 'Name',
+            render: function (data, type, row) {
+                // Check if 'Name' exists
+                if (data) {
+                    return data;
+                } else {
+                    return 'N/A'; // or any other placeholder for missing data
+                }
+            }
+        },
+        { data: 'Type', title: 'Type' },
+    ],
+    order: [[3, 'desc']]
+});
+
+  
+        // Event handler for row click
+        $('#myTable tbody').on('click', 'tr', function () {
+          var rowData = dataTable.row(this).data();
+  
+          // Check if rowData is not undefined
+          if (rowData) {
+            // Log rowData to the console (you can replace this with your logic)
+            console.log('Clicked Row Data:', rowData);
+  
+            window.location.href = 'https://bloomnetwork.online/Items/' + rowData.ID;
+          }
+        });
+  
+        $.ajax({
+          url: 'https://api.bloomnetwork.online/items',
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            // Hide loading spinner
+            $("#loading-spinner").hide();
+  
+            // Show content
+            $("#content").show();
+  
+            // Convert nested object into an array of objects
+            const dataArray = Object.keys(data.result).map(key => {
+              return { ID: key, ...data.result[key] };
+            });
+  
+            // Populate DataTable with the fetched data
+            dataTable.clear().rows.add(dataArray).draw();
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      } else {
+        // DataTable script is not loaded
+        console.error('DataTables script not loaded.');
+      }
+    });
+  </script>
+  

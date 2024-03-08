@@ -1,0 +1,107 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- RowReorder CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- RowReorder JS -->
+    <script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+
+    <!-- Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+#loading-spinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+    .fade:not(.active) {
+    display: none;
+}
+</style>
+<div id="loading-spinner"></div>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Website is in progess</strong> If you encounter any errors during your purchase report to staff
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="btn nav-link active" aria-current="page" data-bs-toggle="tab" href="#home">
+            <strong>Home</strong>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="btn nav-link" data-bs-toggle="tab" href="#ranks">
+            <strong>Ranks</strong> <span class="badge text-bg-secondary">3</span>
+        </a>
+    </li>  
+
+
+    <li class="nav-item">
+        <a class="btn nav-link" data-bs-toggle="tab" href="#vaults">
+            <strong>Vaults</strong> <span class="badge text-bg-secondary">2</span>
+        </a>
+    </li>
+
+
+</ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://bloom.craftingstore.net/" title="YouTube video" allowfullscreen></iframe>
+          </div>
+    </div>
+    <div class="tab-pane fade" id="ranks" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div id="content" style="display: none;" class="container-fluid">
+            <div class="ratio ratio-16x9">
+                <iframe src="https://bloom.craftingstore.net/" title="YouTube video" allowfullscreen></iframe>
+              </div>
+    </div>
+
+
+    <div class="tab-pane fade" id="vaults" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">            <div class="ratio ratio-16x9">
+        <iframe src="https://bloom.craftingstore.net/" title="YouTube video" allowfullscreen></iframe>
+      </div>
+
+
+  </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        // Show loading spinner
+        $("#loading-spinner").show();
+    
+        // Simulate some delay (you can remove this line in your actual implementation)
+        setTimeout(function() {
+            // Hide loading spinner
+            $("#loading-spinner").hide();
+    
+            // Show content
+            $("#content").show();
+        }, 2000); // Adjust the delay as needed
+    });
+    </script>
+    
