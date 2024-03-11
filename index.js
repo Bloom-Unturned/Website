@@ -48,7 +48,9 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get('/admin', isAuthenticated, (req, res) => {
-  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Admin/index.ejs') });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Admin/index.ejs') });
 });
 
 app.get('/auth/steam',
@@ -64,32 +66,44 @@ app.get('/auth/steam/return',
 });
 
 app.get('/', (req, res) => {
-  console.log(req.user);
-  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Home/index.ejs') });
+  console.log(req.user)
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Home/index.ejs') });
 });
 
 app.use('/images', express.static(path.join(__dirname, 'items/icons')));
 
 app.get('/auth/login', (req, res) => {
-  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Login/index.ejs') });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Login/index.ejs') });
 });
 
 app.get('/players/:id', (req, res) => {
   const playerId = req.params.id;
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Players/player.ejs'), playerId: playerId  });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Players/player.ejs'), playerId: playerId  });
 });
 
 app.get('/players', (req, res) => {
-  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
 });
 
 app.get('/Items', (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Items/index.ejs') });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Items/index.ejs') });
 });
 
 app.get('/Items/:id', (req, res) => {
   const item = req.params.id;
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Items/item.ejs'), item: item  });
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Items/item.ejs'), item: item  });
 });
 
 app.get('/store', (req, res) => {

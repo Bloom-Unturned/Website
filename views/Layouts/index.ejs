@@ -195,8 +195,11 @@ main > .container {
             <a class="nav-link disabled" aria-disabled="true">Settings</a>
           </li>
         </ul>
-
-        <% if(!isLoggedIn) { %>
+        <% if(user) {%>
+        <form class="d-flex" role="search">
+          <button class="btn btn-outline-success" type="submit">Login</button>
+        </form>
+        <% } else {%>
         <div class="dropdown d-flex"role="search" style="
             padding-left: 1rem;
             padding-right: 1rem;">
@@ -209,7 +212,7 @@ main > .container {
             <li><a class="dropdown-item" href="#">Sign out</a></li>
           </ul>
         </div>
-        <% } %>
+        <% }%>
       </div>
     </div>
   </nav>
