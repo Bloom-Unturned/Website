@@ -195,15 +195,11 @@ main > .container {
             <a class="nav-link disabled" aria-disabled="true">Settings</a>
           </li>
         </ul>
-        <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+
+        <% if(!isLoggedIn) { %>
         <div class="dropdown d-flex"role="search" style="
             padding-left: 1rem;
-            padding-right: 1rem;
-
-        ">
+            padding-right: 1rem;">
           <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
@@ -213,13 +209,14 @@ main > .container {
             <li><a class="dropdown-item" href="#">Sign out</a></li>
           </ul>
         </div>
+        <% } %>
       </div>
     </div>
   </nav>
 </header>
 
 <!-- Begin page content -->
-<main class="flex-shrink-0" style="background-color: #0000001a;">
+<main class="flex-shrink-0">
   <div class="container">
     <%- include(content) %>
   </div>

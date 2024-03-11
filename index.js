@@ -48,13 +48,8 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get('/admin', isAuthenticated, (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Admin/index.ejs') });
+  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Admin/index.ejs') });
 });
-
-app.get('/admin/logs', isAuthenticated, (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Admin/Logs/index.ejs') });
-});
-
 
 app.get('/auth/steam',
   passport.authenticate('steam', { failureRedirect: '/' }),
@@ -69,13 +64,14 @@ app.get('/auth/steam/return',
 });
 
 app.get('/', (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Home/index.ejs') });
+  console.log(req.user.id);
+  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Home/index.ejs') });
 });
 
 app.use('/images', express.static(path.join(__dirname, 'items/icons')));
 
 app.get('/auth/login', (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Login/index.ejs') });
+  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Login/index.ejs') });
 });
 
 app.get('/players/:id', (req, res) => {
@@ -84,7 +80,7 @@ app.get('/players/:id', (req, res) => {
 });
 
 app.get('/players', (req, res) => {
-  res.render('Layouts/index', { content: path.join(__dirname, 'views/Players/index.ejs') });
+  res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
 });
 
 app.get('/Items', (req, res) => {
