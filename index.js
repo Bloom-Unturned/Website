@@ -64,7 +64,7 @@ app.get('/auth/steam/return',
 });
 
 app.get('/', (req, res) => {
-  console.log(req.user.id);
+  console.log(req.user);
   res.render('Layouts/index', { isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Home/index.ejs') });
 });
 
