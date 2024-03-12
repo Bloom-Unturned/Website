@@ -19,7 +19,7 @@ app.engine('html', require('ejs').renderFile);
 const steamApiKey = process.env.STEAM_API_KEY;
 const sessionSecret = process.env.SESSION_SECRET;
 passport.use(new SteamStrategy({
-  returnURL: process.RETURN_URL,
+  returnURL: process.env.RETURN_URL,
   realm: process.env.REALM,
   apiKey: steamApiKey,
 },
