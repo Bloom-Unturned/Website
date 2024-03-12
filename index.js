@@ -19,8 +19,8 @@ app.engine('html', require('ejs').renderFile);
 const steamApiKey = process.env.STEAM_API_KEY;
 const sessionSecret = process.env.SESSION_SECRET;
 passport.use(new SteamStrategy({
-  returnURL: 'https://bloomnetwork.online/auth/steam/return',
-  realm: 'https://bloomnetwork.online',
+  returnURL: process.RETURN_URL,
+  realm: process.env.REALM,
   apiKey: steamApiKey,
 },
 (identifier, profile, done) => {
