@@ -62,7 +62,7 @@ app.get('/auth/steam',
 app.get('/auth/steam/return',
   passport.authenticate('steam', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/admin'); 
+    res.redirect('/'); 
 });
 
 app.get('/', (req, res) => {
@@ -91,6 +91,11 @@ app.get('/players', (req, res) => {
   res.render('Layouts/index', { 
     user: req.user, 
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
+});
+app.get('/profile', (req, res) => {
+  res.render('Layouts/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/index.ejs') });
 });
 
 app.get('/Items', (req, res) => {

@@ -195,21 +195,18 @@ $(document).ready(function () {
             const supplies = [];
             console.log(i);
             const blueprintSupplies = itemData[`Blueprint_${i}_Supplies`] ?? 1;
-            
-            for (let j = 0; j < blueprintSupplies; j++) {
+        for (let j = 0; j < blueprintSupplies; j++) {
                 const supplyId = itemData[`Blueprint_${i}_Supply_${j}_ID`];
                 const supplyAmount = itemData[`Blueprint_${i}_Supply_${j}_Amount`] ?? 1;
                 supplies.push(`<a href="https://bloomnetwork.online/Items/${supplyId}" target="_blank"><img src='https://bloomnetwork.online/images/${supplyId}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a> x${supplyAmount}`);
-            }
+        }
             if(itemData[`Blueprint_${i}_Type`]){
               if(itemData[`Blueprint_${i}_Type`] == "Repair")  supplies.push(`<a href="http://admin.bloomnetwork.online/Items/${itemData.ID}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData.ID}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a> x1`);
             }
             if (itemData[`Blueprint_${i}_Tool`]) {
                 supplies.push(`<a href="https://bloomnetwork.online/Items/${itemData[`Blueprint_${i}_Tool`]}" target="_blank"><img src='https://bloomnetwork.online/images/${itemData[`Blueprint_${i}_Tool`]}.png' alt='Blueprint Icon' style='width: 35px; height: auto;'></a>`);
             }
-            
             const bluep = supplies.join(" + ");
-            
             let product;
             if (itemData[`Blueprint_${i}_Product`]) {
               console.log(11)
@@ -238,11 +235,8 @@ $(document).ready(function () {
     error: function(error) {
         console.error('Error fetching data:', error);
     }
+  });
 });
-
-
- 
-    });
 </script>
 
 </body>
