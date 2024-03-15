@@ -46,8 +46,20 @@ const isAuthenticated = (req, res, next) => {
   }
   res.redirect('/auth/login');
 };
+const isAdmin = (req, res, next) => {
+  fetch(`https://api.bloomnetwork.online/Players/isadmin?steamid=${req.user.id}`)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+    if(data.result == true){
+      return next();
+    }
+  });
+  res.redirect('/auth/login');
+};
 
-app.get('/admin', isAuthenticated, (req, res) => {
+
+app.get('/admin', isAuthenticated, isAdmin, (req, res) => {
   res.render('Layouts/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Admin/index.ejs') });
@@ -93,7 +105,8 @@ app.get('/players', (req, res) => {
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
 });
 app.get('/profile', (req, res) => {
-  res.render('Layouts/index', { 
+  if(!req.user) return res.redirect('auth/steam');
+  res.render('Layouts/Player/index', { 
     user: req.user, 
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/index.ejs') });
 });
@@ -113,6 +126,12 @@ app.get('/Items/:id', (req, res) => {
 
 app.get('/store', (req, res) => {
   res.render('Layouts/index', { content: path.join(__dirname, 'views/Store/index.ejs') });
+});
+app.get('/auth/logout',(req, res, next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
 
 app.use((req, res, next) => {

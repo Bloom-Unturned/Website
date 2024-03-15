@@ -25,9 +25,6 @@
         -moz-user-select: none;
         user-select: none;
       }
-      .container-fluid {
-        padding-top: calc(var(--bs-gutter-x) * .5)
-      }
 
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
@@ -201,6 +198,18 @@
     </div>
   </div>
 </nav>
+
+<div class="nav-scroller bg-body shadow-sm">
+  <nav class="nav container" aria-label="Secondary navigation">
+    <a class="nav-link active" aria-current="page" href="#">Stats</a>
+    <a class="nav-link" href="#">Punishments</a>
+    <a class="nav-link" href="#stats">
+      Raid Alerts
+      <span class="badge badge-danger text-bg-light rounded-pill align-text-bottom">27</span>
+    </a>
+    <a class="nav-link" href="#">Settings</a>
+  </nav>
+</div>
 
 <main class="flex-shrink-0">
   <div class="container">
