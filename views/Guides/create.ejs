@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Guide</title>
+    <!-- Include SimpleMDE CSS -->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/xcatliu/simplemde-theme-dark/master/dist/simplemde-theme-dark.min.css">
+</head>
+<body class="bg-body-tertiary">
+
+<main class="container-fluid mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+            <li class="breadcrumb-item"><a href="https://bloomnetwork.online/guides">Guides</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2>Create Guide</h2>
+                <form id="guideForm" action="https://api.bloomnetwork.online/guides/create" method="POST">
+                    <div class="mb-3">
+                        <label for="guideTitle" class="form-label">Guide Title</label>
+                        <input type="text" class="form-control" id="guideTitle" name="Title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="guideDescription" class="form-label">Guide Description</label>
+                        <textarea class="form-control" id="guideDescription" name="Desc" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="guideIcon" class="form-label">Guide Icon</label>
+                        <input type="file" class="form-control" id="guideIcon" name="Icon" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="guideCategories" class="form-label">Guide Categories</label>
+                        <select multiple class="form-select" id="guideCategories" name="Category">
+                            <option value="Achievements">Achievements</option>
+                            <option value="Characters">Characters</option>
+                            <option value="Classes">Classes</option>
+                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="guideContent" class="form-label">Guide Content (Markdown)</label>
+                        <textarea id="guideContent" name="Content"></textarea>
+                    </div>
+                    <input type="hidden" id="authorId" name="AuthorID" value="<%= playerId %>">
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- SimpleMDE JS -->
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    // Initialize SimpleMDE editor
+    var simplemde = new SimpleMDE({ element: document.getElementById("guideContent") });
+
+    // Handle form submission
+    $('#guideForm').submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Construct form data object
+        var formData = {
+            AuthorID:  '<%= user.id %>',
+            Title: $('#guideTitle').val(),
+            Desc: $('#guideDescription').val(),
+            Icon: $('#guideIcon').val(), // Update this if you're uploading files
+            Category: $('#guideCategories').val(), // Assuming this is a multi-select field
+            Content: simplemde.value() // Assuming SimpleMDE is used for content input
+        };
+        console.log(formData)
+        // Send AJAX request to server
+        $.ajax({
+            type: 'POST',
+            url: 'https://api.bloomnetwork.online/guides/create',
+            contentType: 'application/json', // Specify content type
+            data: JSON.stringify(formData), // Convert data to JSON string
+            success: function(response) {
+                console.log(response);
+                // Handle success response
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                // Handle error response
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

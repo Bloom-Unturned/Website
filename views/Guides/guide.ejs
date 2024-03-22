@@ -27,11 +27,11 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-auto">
-                                <img src="https://avatars.steamstatic.com/d1f2e38959945b174ea434918ceec521ebf64fe4_full.jpg" alt="Guide Icon" width="80" height="80">
+                                <img id="guideIcon" src="https://avatars.steamstatic.com/d1f2e38959945b174ea434918ceec521ebf64fe4_full.jpg" alt="Guide Icon" width="80" height="80">
                             </div>
                             <div class="col">
-                                <h2>Guide Title</h2>
-                                <p class="card-text">Guide description goes here...</p>
+                                <h2 id="guideTitle">Guide Title</h2>
+                                <p id="guideDesc" class="card-text">Guide description goes here...</p>
                             </div>
                         </div>
                     </div>
@@ -48,12 +48,7 @@
         <div class="col-lg-9">
             <div class="container">
                 <div class="guide-content">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida odio sit amet posuere volutpat. Morbi id libero in elit fringilla consectetur. Phasellus tempor dolor justo, ac lobortis arcu feugiat in. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus eu dolor est. Vestibulum porttitor tincidunt velit, at consequat lorem ullamcorper eget. Integer auctor mi ut finibus cursus. Nulla facilisi. Nam vitae dui at nunc tempus tempor. Nulla facilisi. Mauris vel urna non tortor hendrerit feugiat. Donec varius, nunc et mattis bibendum, sapien felis pellentesque turpis, id ullamcorper orci purus nec urna. Integer in ultricies metus.
-                    </p>
-                    <p>
-                        Fusce vestibulum felis nunc, ut efficitur felis aliquam nec. Quisque pharetra velit a libero fermentum suscipit. Nullam in ultricies libero. Sed non posuere justo, sit amet tempus lorem. Integer condimentum urna nisi, et commodo turpis efficitur ut. Ut pharetra tincidunt nibh, sed malesuada libero. Cras sit amet odio dolor. Nulla in nibh in magna congue interdum eget at libero. Curabitur nec justo non velit luctus venenatis vel vel tortor. Proin eleifend vel lorem at fermentum. Proin ultrices vitae ipsum eget efficitur.
-                    </p>
+
                 </div>
             </div>
         </div>
@@ -76,15 +71,48 @@
                     <h4>Language</h4>
                     <p>English</p> 
                     <hr>
-                    <h4>Guide Index</h4>
-                    <p>This is the guide index...</p>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+
 <script src="offcanvas-navbar.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize Showdown converter
+        var converter = new showdown.Converter();
+    
+        $.ajax({
+            url: 'https://api.bloomnetwork.online/guides/guide?guideId=<%= guideId %>',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // Update the HTML table with the received data
+                var guideData = data.result[0];
+                if (!guideData) return;
+                $('#guideTitle').text(guideData.Title);
+                $('#guideDesc').text(guideData.Desc);
+                $('#guideIcon').attr('src', guideData.Icon);
+                
+                // Convert Markdown to HTML
+                var htmlContent = converter.makeHtml(guideData.Content);
+                
+                // Set guide content
+                $('.guide-content').html(htmlContent);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    });
+    </script>
+    
 </body>
 </html>

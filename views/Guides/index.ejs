@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guides Table</title>
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- Include DataTables JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- Include loading spinner CSS -->
+    <style>
+        #loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-spinner"></div>
+
+    <div id="content" style="display: none;" class="container-fluid">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-between">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Guides</li>
+            </ol>
+            <!-- Create Guide button -->
+            <button id="createGuideButton" class="btn btn-primary">Create Guide</button>
+        </nav>
+        <table id="guidesTable" class="display">
+            <thead>
+                <tr>
+                    <th>Guide Details</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Show loading spinner
+            $("#loading-spinner").show();
+
+            // Initialize DataTable
+            var dataTable = $('#guidesTable').DataTable({
+                columns: [
+                    {
+                        data: null,
+                        title: 'Guide Details',
+                        render: function(data, type, row) {
+                            return '<div class="d-flex align-items-center">' +
+                                        '<img src="' + row.Icon + '" alt="Author" width="50" height="50" class="me-3">' +
+                                        '<div>' +
+                                            '<h5 class="card-title">' + row.Title + '</h5>' +
+                                            '<p class="card-text">' + row.Desc + '</p>' +
+                                        '</div>' +
+                                    '</div>';
+                        }
+                    },
+                    { data: 'Category', title: 'Category' }
+                ],
+                // Hide search bar
+                searching: false,
+                // Show entries dropdown with options
+                lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+                // Set default number of entries per page
+                pageLength: 10
+            });
+
+            // Fetch guides data from the server
+            $.ajax({
+                url: 'https://api.bloomnetwork.online/guides',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // Hide loading spinner
+                    $("#loading-spinner").hide();
+
+                    // Show content
+                    $("#content").show();
+
+                    // Populate DataTable with the fetched data
+                    dataTable.rows.add(response.result).draw();
+
+                    // Handle row click event
+                    $('#guidesTable tbody').on('click', 'tr', function () {
+                        var data = dataTable.row(this).data();
+                        if (data) {
+                            window.location.href = '/guides/' + data.ID;
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
+            // Add event listener to the Create Guide button
+            $('#createGuideButton').click(function() {
+                window.location.href = '/guides/create';
+            });
+        });
+    </script>
+</body>
+</html>

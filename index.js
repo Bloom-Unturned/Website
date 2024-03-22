@@ -98,12 +98,23 @@ app.get('/players/:id', (req, res) => {
     user: req.user, 
     content: path.join(__dirname, 'views/Players/player.ejs'), playerId: playerId  });
 });
-
+app.get('/guides/create', (req, res) => {
+  if(!req.user) return res.redirect('/auth/steam');
+  const playerId = req.params.id;
+  res.render('Layouts/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Guides/create.ejs'), playerId: playerId });
+});
 app.get('/guides/:id', (req, res) => {
   const guideId = req.params.id;
   res.render('Layouts/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Guides/guide.ejs'), guideId: guideId  });
+});
+app.get('/guides', (req, res) => {
+  res.render('Layouts/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Guides/index.ejs') });
 });
 
 app.get('/players', (req, res) => {
@@ -112,7 +123,7 @@ app.get('/players', (req, res) => {
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
 });
 app.get('/profile', (req, res) => {
-  if(!req.user) return res.redirect('auth/steam');
+  if(!req.user) return res.redirect('/auth/steam');
   res.render('Layouts/Player/index', { 
     user: req.user, 
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/index.ejs') });
