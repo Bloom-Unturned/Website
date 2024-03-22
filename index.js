@@ -99,6 +99,13 @@ app.get('/players/:id', (req, res) => {
     content: path.join(__dirname, 'views/Players/player.ejs'), playerId: playerId  });
 });
 
+app.get('/guides/:id', (req, res) => {
+  const guideId = req.params.id;
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Guides/guide.ejs'), guideId: guideId  });
+});
+
 app.get('/players', (req, res) => {
   res.render('Layouts/index', { 
     user: req.user, 
@@ -116,7 +123,11 @@ app.get('/Items', (req, res) => {
     user: req.user, 
     content: path.join(__dirname, 'views/Items/index.ejs') });
 });
-
+app.get('/Raid', (req, res) => {
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Raid/index.ejs') });
+});
 app.get('/Items/:id', (req, res) => {
   const item = req.params.id;
   res.render('Layouts/index', { 
