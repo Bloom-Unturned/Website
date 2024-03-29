@@ -65,7 +65,13 @@
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
     // Initialize SimpleMDE editor
-    var simplemde = new SimpleMDE({ element: document.getElementById("guideContent") });
+    var simplemde = new SimpleMDE({ element: document.getElementById("guideContent"), 
+	toolbar: [{
+			name: "bold",
+			action: SimpleMDE.drawTable,
+			className: "fa fa-bold",
+			title: "Bold",
+		}]});
 
     // Handle form submission
     $('#guideForm').submit(function(event) {
