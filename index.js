@@ -44,41 +44,83 @@ const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/auth/login');
+  res.redirect('/auth/steam');
 };
+
 const isAdmin = (req, res, next) => {
   fetch(`https://api.bloomnetwork.online/Players/isadmin?steamid=${req.user.id}`)
   .then(response => response.json())
   .then(data => {
-    console.log(data)
     if(data.result == true){
+      req.user.isAdmin = true; // Store isAdmin status in req object
+      console.log("is admin");
       return next();
     }
+    req.user.isAdmin = false; // Store isAdmin status in req object
+    console.log("is not admin");
+    res.redirect('/');
   });
-  res.redirect('/auth/login');
 };
 
+
+
+/*
+
+  admin part
+
+  /admin
+  /admin/players
+
+  TODO:
+  punishments
+  stats
+
+*/
 
 app.get('/admin', isAuthenticated, isAdmin, (req, res) => {
   res.render('Layouts/index', { 
     user: req.user, 
-    content: path.join(__dirname, 'views/Admin/index.ejs') });
+    content: path.join(__dirname, 'views/Admin/index.ejs') 
+  });
 });
 
-app.get('/auth/steam',
-  passport.authenticate('steam', { failureRedirect: '/' }),
-  (req, res) => {
-    res.redirect('/');
+app.get('/admin/players', isAuthenticated, isAdmin, (req, res) => {
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Admin/Players/index.ejs') 
+  });
+  
 });
 
-app.get('/auth/steam/return',
-  passport.authenticate('steam', { failureRedirect: '/' }),
-  (req, res) => {
-    res.redirect('/'); 
+app.get('/admin/players:id', isAuthenticated, isAdmin, (req, res) => {
+  const playerId = req.params.id;
+  res.render('Layouts/index', { 
+    user: req.user, 
+    content: path.join(__dirname, 'views/Admin/Players/player.ejs') 
+  });
+  
 });
+
+/*
+  steam shenanigans
+*/
+
+app.get('/auth/steam', (req, res, next) => {
+  // Store the original requested URL in session
+
+  // Proceed with Steam authentication
+  passport.authenticate('steam', { failureRedirect: '/' })(req, res, next);
+});
+
+
+app.get('/auth/steam/return', passport.authenticate('steam', {
+  failureRedirect: '/',
+}), (req, res) => {
+  res.redirect('/');
+});
+
 
 app.get('/', (req, res) => {
-  console.log(req.user)
   res.render('Layouts/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Home/index.ejs') });
@@ -92,14 +134,38 @@ app.get('/auth/login', (req, res) => {
     content: path.join(__dirname, 'views/Login/index.ejs') });
 });
 
+
+/*
+
+  /players
+  /players/76561198337674827
+
+*/
+
 app.get('/players/:id', (req, res) => {
   const playerId = req.params.id;
   res.render('Layouts/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Players/player.ejs'), playerId: playerId  });
 });
-app.get('/guides/create', (req, res) => {
-  if(!req.user) return res.redirect('/auth/steam');
+
+app.get('/players', (req, res) => {
+  res.render('Layouts/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
+});
+
+/*
+
+  /guides
+  /guides/create
+  /guides/id -> n
+  TODO:
+  /guides/edit/id -> n
+
+*/
+
+app.get('/guides/create', isAuthenticated, (req, res) => {
   const playerId = req.params.id;
   res.render('Layouts/index', { 
     user: req.user, 
@@ -117,11 +183,7 @@ app.get('/guides', (req, res) => {
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Guides/index.ejs') });
 });
 
-app.get('/players', (req, res) => {
-  res.render('Layouts/index', { 
-    user: req.user, 
-    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Players/index.ejs') });
-});
+
 app.get('/profile', (req, res) => {
   if(!req.user) return res.redirect('/auth/steam');
   res.render('Layouts/Player/index', { 

@@ -1,1 +1,103 @@
-<a>lieb puta</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <style>
+        /* Add your custom styles here */
+        .admin-portal {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .admin-box {
+            width: calc(50% - 20px);
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .admin-box:hover {
+            transform: scale(1.05);
+        }
+        .admin-box a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn-players {
+            background-color: #007bff;
+        }
+        .btn-stats {
+            background-color: #28a745;
+        }
+        .btn-reports {
+            background-color: #ffc107;
+        }
+        .btn-settings {
+            background-color: #dc3545;
+        }
+        .btn-messages {
+            background-color: #17a2b8;
+        }
+        .btn-analytics {
+            background-color: #6610f2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .admin-box {
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="admin-portal">
+            <div class="admin-box btn-players">
+                <a href="http://localhost:2001/admin/players">
+                    <h3>Players</h3>
+                    <p>Manage Players</p>
+                </a>
+            </div>
+            <div class="admin-box btn-stats">
+                <a href="http://localhost:2001/admin/stats">
+                    <h3>Stats</h3>
+                    <p>View Statistics</p>
+                </a>
+            </div>
+            <div class="admin-box btn-reports">
+                <a href="#">
+                    <h3>Reports</h3>
+                    <p>Generate Reports</p>
+                </a>
+            </div>
+            <div class="admin-box btn-settings">
+                <a href="#">
+                    <h3>Settings</h3>
+                    <p>Manage Settings</p>
+                </a>
+            </div>
+            <div class="admin-box btn-messages">
+                <a href="#">
+                    <h3>Messages</h3>
+                    <p>View Messages</p>
+                </a>
+            </div>
+            <div class="admin-box btn-analytics">
+                <a href="#">
+                    <h3>Analytics</h3>
+                    <p>Track Analytics</p>
+                </a>
+            </div>
+            <!-- Add more boxes for other parts of the admin website here -->
+        </div>
+    </div>
+</body>
+</html>

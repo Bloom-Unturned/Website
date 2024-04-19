@@ -188,6 +188,9 @@
             <img src="<%= user.photos[0].value%>" alt="user" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small">
+            <% if(user.isAdmin) {%>
+            <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
+            <% }%>
             <li><a class="dropdown-item" href="/Profile">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/auth/logout">Sign out</a></li>
