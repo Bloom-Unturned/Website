@@ -58,7 +58,7 @@
 </head>
 <body>
 
-  <div class="container-fluid mt-10">
+  <div class="container mt-3">
     <!-- Player Information Card -->
     
 
@@ -73,13 +73,13 @@
       </div>
     <div class="card player-info-card" style="margin-bottom: 10px;">
       <div class="card-header">
-        <h5 class="card-title"><a id="link" href="https://steamcommunity.com/profiles/<%= playerId %>" target="_blank">Hath</a></h5>
+        <h5 class="card-title"><a id="link" href="https://steamcommunity.com/profiles/<%= user.id %>" target="_blank">Hath</a></h5>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-4 card-img-col">
             <div class="full-width-image-container">
-              <img id= "avatar" src="https://steamuserimages-a.akamaihd.net/ugc/885384897182110030/F095539864AC9E94AE5236E04C8CA7C2725BCEFF/" alt="Steam Avatar" class="img-fluid full-width-image">
+              <img id= "avatar" src="<%= user.photos[2].value %>" alt="Steam Avatar" class="img-fluid full-width-image">
             </div>
           </div>
           <!-- Player Data Table -->
@@ -88,29 +88,29 @@
               <tr>
                 <td><b>SteamID</b></td>
                 <td>
-                  <span id="steamId"><%= playerId %></span>
+                  <span id="steamId"><%= user.id %></span>
                   <button class="copy-button" data-clipboard-target="#steamId">Copy</button>
                 </td>
               </tr>
               <tr>
                 <td><b>Community Visibility State</b></td>
-                <td>3</td>
+                <td><%= user._json.communityvisibilitystate %></td>
               </tr>
               <tr>
                 <td><b>Profile State</b></td>
-                <td>1</td>
+                <td><%= user._json.profilestate %></td>
               </tr>
               <tr>
                 <td><b>Created</b></td>
-                <td>1484070705</td>
+                <td><%= user._json.timecreated %></td>
               </tr>
               <tr>
                 <td><b>Last Log off</b></td>
-                <td>1706949417</td>
+                <td><%= user._json.lastlogoff %></td>
               </tr>
               <tr>
                 <td><b>Country</b></td>
-                <td>1706949417</td>
+                <td><%= user._json.loccountrycode %></td>
               </tr>
               <!-- Add more rows based on your data -->
             </table>
@@ -252,109 +252,107 @@
   <script>
     new ClipboardJS('.copy-button');
   </script>
-  <!-- Your DataTable JavaScript code goes here (e.g., initialization and mock data) -->
   <script>
     
-$(document).ready(function () {
-    $.ajax({
-    url: 'https://api.pandahut.net/api/Bans/PvP/<%= playerId %>',
-    method: 'GET',
-    dataType: 'json',
-    success: function (data) {
-        // Local Punishments DataTable
-        $('#localpunisht').DataTable({
-            ordering: false,
-            searching: false,
-            paging: false
-        });
-        const localPunishmentsTable = $('#globalpunisht').DataTable({
-            data: data,
-            autoWidth: false,
-            columns: [
-                { data: 'serverBannedOn', title: 'Server' },
-                { data: 'banMessage', title: 'Reason' },
-                { data: 'banTime', title: 'Date' }
-            ],
-            ordering: false,
-            searching: false,
-            paging: false
-        });
-        data.forEach(function (ban) {
-            if(ban.banMessage.toLowerCase().includes("cheating")){
-                $('#wherecheating').text(ban.serverBannedOn);
-                return $('#cheating').show();
+    $(document).ready(function () {
+        $.ajax({
+        url: 'https://api.pandahut.net/api/Bans/PvP/<%= user.id %>',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Local Punishments DataTable
+            $('#localpunisht').DataTable({
+                ordering: false,
+                searching: false,
+                paging: false
+            });
+            const localPunishmentsTable = $('#globalpunisht').DataTable({
+                data: data,
+                autoWidth: false,
+                columns: [
+                    { data: 'serverBannedOn', title: 'Server' },
+                    { data: 'banMessage', title: 'Reason' },
+                    { data: 'banTime', title: 'Date' }
+                ],
+                ordering: false,
+                searching: false,
+                paging: false
+            });
+            data.forEach(function (ban) {
+                if(ban.banMessage.toLowerCase().includes("cheating")){
+                    $('#wherecheating').text(ban.serverBannedOn);
+                    return $('#cheating').show();
+                }
+            });
+        },
+        error: function (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+    
+    
+        $.ajax({
+            url: 'https://api.bloomnetwork.online/steam/usersummaries?steamid=<%= user.id %>',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+    
+                $('#avatar').attr('src', data.result.response.players[0].avatarfull);
+                $('#link').text(data.result.response.players[0].personaname);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
             }
         });
-    },
-    error: function (error) {
-        console.error('Error fetching data:', error);
-    }
-});
-
-
-    $.ajax({
-        url: 'https://api.bloomnetwork.online/steam/usersummaries?steamid=<%= playerId %>',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-
-            $('#avatar').attr('src', data.result.response.players[0].avatarfull);
-            $('#link').text(data.result.response.players[0].personaname);
-        },
-        error: function (error) {
-            console.error('Error fetching data:', error);
-        }
+        $.ajax({
+            url: 'https://api.bloomnetwork.online/players/player?steamid=<%= user.id %>',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+              // Update the HTML table with the received data
+              var playerData = data.result[0];
+              if(!playerData) return $('#neverjoined').show();
+            $('#zombiesValue').text(playerData.Zombies);
+            $('#messagesValue').text(playerData.Messages);
+            $('#deathsValue').text(playerData.Deaths);
+            $('#headshotsValue').text(playerData.Headshots);
+            $('#killsValue').text(playerData.Kills);
+            $('#megaZombiesValue').text(playerData.MegaZombies);
+            $('#resourcesValue').text(playerData.Resources);
+            $('#harvestsValue').text(playerData.Harvests);
+            $('#fishValue').text(playerData.Fish);
+            $('#animalsValue').text(playerData.Animals);
+            },
+            error: function (error) {
+              console.error('Error fetching data:', error);
+            }
+          });
+        $.ajax({
+            url: 'https://api.bloomnetwork.online/steam/userstatsforgame?steamid=<%= user.id %>',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if(!data.result.playerstats) return;
+                const statsTable = $('#statsTable').DataTable({
+                    data: data.result.playerstats.stats,
+                    autoWidth: false,
+            columns: [
+              { data: 'name', title: 'Stat Name' },
+              { data: 'value', title: 'Stat Value' }
+            ],
+            ordering: false, // Disable sorting
+            searching: false, // Disable searching
+            paging: false // Disable paging
+          });
+          $('#statsTable thead').hide();
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    
+        // Call the function to generate the table rows
     });
-    $.ajax({
-        url: 'https://api.bloomnetwork.online/players/player?steamid=<%= playerId %>',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-          // Update the HTML table with the received data
-          var playerData = data.result[0];
-          if(!playerData) return $('#neverjoined').show();
-        $('#zombiesValue').text(playerData.Zombies);
-        $('#messagesValue').text(playerData.Messages);
-        $('#deathsValue').text(playerData.Deaths);
-        $('#headshotsValue').text(playerData.Headshots);
-        $('#killsValue').text(playerData.Kills);
-        $('#megaZombiesValue').text(playerData.MegaZombies);
-        $('#resourcesValue').text(playerData.Resources);
-        $('#harvestsValue').text(playerData.Harvests);
-        $('#fishValue').text(playerData.Fish);
-        $('#animalsValue').text(playerData.Animals);
-        },
-        error: function (error) {
-          console.error('Error fetching data:', error);
-        }
-      });
-    $.ajax({
-        url: 'https://api.bloomnetwork.online/steam/userstatsforgame?steamid=<%= playerId %>',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            if(!data.result.playerstats) return;
-            const statsTable = $('#statsTable').DataTable({
-                data: data.result.playerstats.stats,
-                autoWidth: false,
-        columns: [
-          { data: 'name', title: 'Stat Name' },
-          { data: 'value', title: 'Stat Value' }
-        ],
-        ordering: false, // Disable sorting
-        searching: false, // Disable searching
-        paging: false // Disable paging
-      });
-      $('#statsTable thead').hide();
-        },
-        error: function (error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-
-    // Call the function to generate the table rows
-});
-</script>
-
+    </script>
 </body>
 </html>

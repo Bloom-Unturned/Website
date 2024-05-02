@@ -190,6 +190,24 @@ app.get('/profile', (req, res) => {
     user: req.user, 
     isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/index.ejs') });
 });
+app.get('/profile/logs', (req, res) => {
+  if(!req.user) return res.redirect('/auth/steam');
+  res.render('Layouts/Player/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/logs.ejs') });
+});
+app.get('/profile/punishments', (req, res) => {
+  if(!req.user) return res.redirect('/auth/steam');
+  res.render('Layouts/Player/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/punishments.ejs') });
+});
+app.get('/profile/settings', (req, res) => {
+  if(!req.user) return res.redirect('/auth/steam');
+  res.render('Layouts/Player/index', { 
+    user: req.user, 
+    isLoggedIn: req.isAuthenticated(), content: path.join(__dirname, 'views/Profile/settings.ejs') });
+});
 
 app.get('/Items', (req, res) => {
   res.render('Layouts/index', { 
