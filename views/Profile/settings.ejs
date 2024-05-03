@@ -166,7 +166,7 @@
               url: "https://api.bloomnetwork.online/discord/link",
               type: "POST",
               contentType: 'application/json',
-              data: JSON.stringify({ SteamId: steamId, DiscordId: Number(discordId) }), 
+              data: JSON.stringify({ SteamId: steamId, DiscordId: discordId }), 
               success: function (response) {
                 $("#staticDiscordId").val(discordId)
               },
