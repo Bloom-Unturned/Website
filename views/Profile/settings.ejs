@@ -1,358 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Player Information and DataTables</title>
-  <!-- Add Bootstrap CSS link -->
-  <!-- Add DataTables CSS link -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
-  <!-- Add Clipboard.js CDN link -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
-  <!-- Add your custom styles if needed -->
-  <style>
-    .vertical-divider {
-      border-right: 1px solid #ddd;
-      height: 100%;
-    }
-    .table-container {
-      margin-top: 20px;
-    }
-    .full-width-image-container {
-      width: 100%;
-      height: 100%;
-    }
-    .full-width-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .player-info-card {
-      height: auto; /* Auto height for the card body */
-      display: flex;
-    }
-    .card-body {
-      overflow-y: auto; /* Add scrollbars if the content overflows */
-    }
-    .card-img-col {
-      flex: 0 0 auto; /* Make the image column non-flexible */
-      max-width: 300px; /* Set a maximum width for the image column */
-    }
-    .copy-button {
-      cursor: pointer;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 3px 7px;
-      border-radius: 3px;
-      margin-left: 5px;
-    }
-    .fade:not(.active) {
+    <!-- RowReorder CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.4.1/css/rowReorder.dataTables.min.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- RowReorder JS -->
+    <script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
+
+    <!-- Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<style>
+#loading-spinner {
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
 }
-  </style>
-</head>
-<body>
 
-  <div class="container mt-3">
-    <!-- Player Information Card -->
-    
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.breadcrumb-chevron {
+  --bs-breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d'%3E%3Cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  gap: .5rem;
+}
+.breadcrumb-chevron .breadcrumb-item {
+  display: flex;
+  gap: inherit;
+  align-items: center;
+  padding-left: 0;
+  line-height: 1;
+}
+.breadcrumb-chevron .breadcrumb-item::before {
+  gap: inherit;
+  float: none;
+  width: 1rem;
+  height: 1rem;
+}
+
+.breadcrumb-custom .breadcrumb-item {
+  position: relative;
+  flex-grow: 1;
+  padding: .75rem 3rem;
+}
+.breadcrumb-custom .breadcrumb-item::before {
+  display: none;
+}
+.breadcrumb-custom .breadcrumb-item::after {
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  z-index: 1;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-top: -25px;
+  content: "";
+  background-color: var(--bs-tertiary-bg);
+  border-top-right-radius: .5rem;
+  box-shadow: 1px -1px var(--bs-border-color);
+  transform: scale(.707) rotate(45deg);
+}
+.breadcrumb-custom .breadcrumb-item:first-child {
+  padding-left: 1.5rem;
+}
+.breadcrumb-custom .breadcrumb-item:last-child {
+  padding-right: 1.5rem;
+}
+.breadcrumb-custom .breadcrumb-item:last-child::after {
+  display: none;
+}
 
 
-     <div id="neverjoined" style="display: none" class="alert alert-warning" role="alert">
-        <h4 class="alert-heading">This Player has never joined!</h4>
-        <p class="mb-0">Things such as global stats, achievements, and external punishments will still show.</p>
-      </div>
-      <div id="cheating" style="display: none" class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">This Player is cheating!</h4>
-        <p class="mb-0">He was found cheating and banned on </p><p id="wherecheating" class="mb-0">  </p>
-      </div>
-    <div class="card player-info-card" style="margin-bottom: 10px;">
-      <div class="card-header">
-        <h5 class="card-title"><a id="link" href="https://steamcommunity.com/profiles/<%= user.id %>" target="_blank">Hath</a></h5>
-      </div>
+
+</style>
+<div id="loading-spinner"></div>
+
+
+<div id="content" style="display: none;" class="container mt-3">
+  <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/">Home</a></li>
+          <li class="breadcrumb-item"><a href="https://bloomnetwork.online/Profile">Profile</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Settings</li>
+      </ol>
+  </nav>
+  <div class="card mb-3">
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-4 card-img-col">
-            <div class="full-width-image-container">
-              <img id= "avatar" src="<%= user.photos[2].value %>" alt="Steam Avatar" class="img-fluid full-width-image">
-            </div>
+          <div class="row">
+              <div class="col-md-12 ">
+                  <h3>Discord Settings</h3>
+                  <div class="form-group">
+                    <label class="input-group mb-2"for="discord">Go to Discord > User Settings > Advanced and enable Developer mode, then go back to the bottom left corner on your profile tag, left-click and press "Copy Discord ID"</label>
+                    <div class="mb-1 row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Linked account</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext" id="staticDiscordId" value="Not Linked">
+                        </div>
+                    </div>
+                
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="discordId">Discord ID</span>
+                        <input id="discordIdInput" type="text" class="form-control" placeholder="696481341566615664" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <label class="input-group mb-2" for="discord">
+                      <i>If you don't link your account you won't be able to receive raid alerts on Discord.</i>
+                  </label>
+                    <button id="updateDiscord" type="button" class="btn btn-success float-end mb-2">Update</button>
+                </div>
+                
+              </div>
+              
           </div>
-          <!-- Player Data Table -->
-          <div class="col-md-8">
-            <table class="table table-borderless table-striped">
-              <tr>
-                <td><b>SteamID</b></td>
-                <td>
-                  <span id="steamId"><%= user.id %></span>
-                  <button class="copy-button" data-clipboard-target="#steamId">Copy</button>
-                </td>
-              </tr>
-              <tr>
-                <td><b>Community Visibility State</b></td>
-                <td><%= user._json.communityvisibilitystate %></td>
-              </tr>
-              <tr>
-                <td><b>Profile State</b></td>
-                <td><%= user._json.profilestate %></td>
-              </tr>
-              <tr>
-                <td><b>Created</b></td>
-                <td><%= user._json.timecreated %></td>
-              </tr>
-              <tr>
-                <td><b>Last Log off</b></td>
-                <td><%= user._json.lastlogoff %></td>
-              </tr>
-              <tr>
-                <td><b>Country</b></td>
-                <td><%= user._json.loccountrycode %></td>
-              </tr>
-              <!-- Add more rows based on your data -->
-            </table>
-          </div>
-        </div>
       </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                  <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats">Local Stats</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="api-tab" data-toggle="tab" href="#api">Global Stats</a>
-                </li>
-              </ul>
-            
-              <div class="tab-content">
-                <!-- Stats Tab -->
-                <div class="tab-pane fade show active" id="stats">
-                    <table class="table table-borderless table-striped caption-top" id="localStatsTable">
-                        <caption>Local stats from the network.</caption>
-                        <tbody>
-                          <tr>
-                            <td>Zombies</td>
-                            <td id="zombiesValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Messages</td>
-                            <td id="messagesValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Deaths</td>
-                            <td id="deathsValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Headshots</td>
-                            <td id="headshotsValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Kills</td>
-                            <td id="killsValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>MegaZombies</td>
-                            <td id="megaZombiesValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Resources</td>
-                            <td id="resourcesValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Harvests</td>
-                            <td id="harvestsValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Fish</td>
-                            <td id="fishValue">0</td>
-                          </tr>
-                          <tr>
-                            <td>Animals</td>
-                            <td id="animalsValue">0</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                </div>
-            
-                <!-- API Tab -->
-                <div class=" fade " id="api">
-                    <table id="statsTable" class="table table-striped table-borderless caption-top">
-                        <caption>Global stats gathered in singleplayer as well as every multiplayer you have played.</caption>
-                        <tbody></tbody>
-                      </table>
-                </div>
-              </div>
-            <!-- Vertical Divider -->
-        </div>
-        <div class="col-md-8">
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                  <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#localpunish">Local Punishments</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="api-tab" data-toggle="tab" href="#globalpunish">Global Punishments</a>
-                </li>
-              </ul>
-            
-              <div class="tab-content">
-                <!-- Stats Tab -->
-                <div class="tab-pane fade show active" id="localpunish">
-                    <div class="table-responsive">
-                        <table id= "localpunisht" class="table table-striped table-hover table-responsive caption-top">
-                            <caption>Local punishments for the network.</caption>
-                            <thead>
-                                <th scope="col">Server</th>
-                                <th scope="col">Reason</th>
-                                <th scope="col">Date</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                          </table>
-                        </div>
-                </div>
-            
-                <!-- API Tab -->
-                <div class=" fade" id="globalpunish">
-                    <div class="table-responsive">
-                        <table id= "globalpunisht" class="table table-striped table-hover table-responsive caption-top">
-                            <caption>Global punishments from multiplayer.</caption>
-                            <thead>
-                                <th scope="col">Server</th>
-                                <th scope="col">Reason</th>
-                                <th scope="col">Date</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                          </table>
-                        </div>
-                </div>
-              </div>
-            <!-- Vertical Divider -->
-        </div>
-    </div>
   </div>
-  <!-- Add Bootstrap JS and jQuery links -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- Add DataTables JS links -->
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
-  <!-- Initialize Clipboard.js -->
-  <script>
-    new ClipboardJS('.copy-button');
-  </script>
-  <script>
-    
-    $(document).ready(function () {
-        $.ajax({
-        url: 'https://api.pandahut.net/api/Bans/PvP/<%= user.id %>',
+  
+  
+</div>
+
+
+<script>
+  $(document).ready(function () {
+      // Show loading spinner
+      $("#loading-spinner").show();
+
+      $("#loading-spinner").hide();
+
+
+      $.ajax({
+        url: 'https://api.bloomnetwork.online/discord/isLinked?steamid=<%= user.id %>',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            // Local Punishments DataTable
-            $('#localpunisht').DataTable({
-                ordering: false,
-                searching: false,
-                paging: false
-            });
-            const localPunishmentsTable = $('#globalpunisht').DataTable({
-                data: data,
-                autoWidth: false,
-                columns: [
-                    { data: 'serverBannedOn', title: 'Server' },
-                    { data: 'banMessage', title: 'Reason' },
-                    { data: 'banTime', title: 'Date' }
-                ],
-                ordering: false,
-                searching: false,
-                paging: false
-            });
-            data.forEach(function (ban) {
-                if(ban.banMessage.toLowerCase().includes("cheating")){
-                    $('#wherecheating').text(ban.serverBannedOn);
-                    return $('#cheating').show();
-                }
-            });
+          console.log(data)
+            if(data.linked == true) $("#staticDiscordId").val(data.discordId)
+
         },
         error: function (error) {
             console.error('Error fetching data:', error);
         }
     });
-    
-    
-        $.ajax({
-            url: 'https://api.bloomnetwork.online/steam/usersummaries?steamid=<%= user.id %>',
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-    
-                $('#avatar').attr('src', data.result.response.players[0].avatarfull);
-                $('#link').text(data.result.response.players[0].personaname);
-            },
-            error: function (error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-        $.ajax({
-            url: 'https://api.bloomnetwork.online/players/player?steamid=<%= user.id %>',
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-              // Update the HTML table with the received data
-              var playerData = data.result[0];
-              if(!playerData) return $('#neverjoined').show();
-            $('#zombiesValue').text(playerData.Zombies);
-            $('#messagesValue').text(playerData.Messages);
-            $('#deathsValue').text(playerData.Deaths);
-            $('#headshotsValue').text(playerData.Headshots);
-            $('#killsValue').text(playerData.Kills);
-            $('#megaZombiesValue').text(playerData.MegaZombies);
-            $('#resourcesValue').text(playerData.Resources);
-            $('#harvestsValue').text(playerData.Harvests);
-            $('#fishValue').text(playerData.Fish);
-            $('#animalsValue').text(playerData.Animals);
-            },
-            error: function (error) {
-              console.error('Error fetching data:', error);
-            }
+
+
+      // Show content
+      $("#content").show();
+      $("#updateDiscord").click(function () {
+          var discordId = $("#discordIdInput").val(); 
+          var steamId = "<%= user.id %>"
+          $.ajax({
+              url: "https://api.bloomnetwork.online/discord/link",
+              type: "POST",
+              contentType: 'application/json',
+              data: JSON.stringify({ SteamId: steamId, DiscordId: Number(discordId) }), 
+              success: function (response) {
+                $("#staticDiscordId").val(discordId)
+              },
+              error: function (xhr, status, error) {
+                  // Handle error response
+                  console.error("Error:", error);
+              }
           });
-        $.ajax({
-            url: 'https://api.bloomnetwork.online/steam/userstatsforgame?steamid=<%= user.id %>',
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                if(!data.result.playerstats) return;
-                const statsTable = $('#statsTable').DataTable({
-                    data: data.result.playerstats.stats,
-                    autoWidth: false,
-            columns: [
-              { data: 'name', title: 'Stat Name' },
-              { data: 'value', title: 'Stat Value' }
-            ],
-            ordering: false, // Disable sorting
-            searching: false, // Disable searching
-            paging: false // Disable paging
-          });
-          $('#statsTable thead').hide();
-            },
-            error: function (error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-    
-        // Call the function to generate the table rows
-    });
-    </script>
-</body>
-</html>
+      });
+  });
+</script>
