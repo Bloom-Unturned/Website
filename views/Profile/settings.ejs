@@ -99,6 +99,7 @@
           <li class="breadcrumb-item active" aria-current="page">Settings</li>
       </ol>
   </nav>
+  <div id="liveAlertPlaceholder"></div>
   <div class="card mb-3">
       <div class="card-body">
           <div class="row">
@@ -141,7 +142,24 @@
 
       $("#loading-spinner").hide();
 
+      const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+      const appendAlert = (message, type) => {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+      `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+      alertPlaceholder.append(wrapper)
+}
 
+const alertTrigger = document.getElementById('updateDiscord')
+if (alertTrigger) {
+  alertTrigger.addEventListener('click', () => {
+    appendAlert('Discord ID updated', 'success')
+  })
+}
       $.ajax({
         url: 'https://api.bloomnetwork.online/discord/isLinked?steamid=<%= user.id %>',
         method: 'GET',
@@ -161,6 +179,7 @@
       $("#content").show();
       $("#updateDiscord").click(function () {
           var discordId = $("#discordIdInput").val(); 
+          if(discordId.length == 0) return;
           var steamId = "<%= user.id %>"
           $.ajax({
               url: "https://api.bloomnetwork.online/discord/link",
