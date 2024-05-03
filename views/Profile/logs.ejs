@@ -102,6 +102,7 @@
             <div class="table-responsive">
 			<table id= "myTable" class="table table-striped table-hover table-responsive" style="width: 100%;">
 				<thead>
+          <th scope="col">Icon</th>
 					<th scope="col">Buildable</th>
           <th scope="col">Owner</th>
           <th scope="col">Group</th>
@@ -127,10 +128,19 @@ $(document).ready(function () {
     // Your DataTable initialization settings
     responsive: true,
     columns: [
+        {
+          data: null,
+          title: 'Icon',
+            render: function(data, type, row) {
+              
+                return '<object data="https://bloomnetwork.online/images//' + row.Id +'.png" type="image/png" style="max-width: 60px; max-height: 30px;"><img src="https://bloomnetwork.online/images/nada.png" style="max-width: 50px; max-height: 50px;"></object>';
+            }
+        },
         { 
             data: 'Name', // Assuming 'Name' corresponds to 'Buildable'
             title: 'Buildable',
             render: function(data, type, row) {
+              
                 return '<a href="https://bloomnetwork.online/items/' + row.Id + '" target="_blank">' + row.Name + '</a>';
             }
         },
@@ -154,7 +164,7 @@ $(document).ready(function () {
             data: null,
             title: 'Damage',
             render: function(data, type, row) {
-                return '<a>' + row.DamageOrigin + ' [-' + row.DamageAmount + ' HP]</a>';
+                return '<a>' + row.DamageAmount + '</a>';
             }
         },
         { data: 'Timestamp', title: 'Timestamp' }
