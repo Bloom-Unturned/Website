@@ -210,7 +210,7 @@ const types = {
 
 async function fetchEconInfoData() {
     try {
-        const response = await fetch('http://localhost:2001/EconInfo.json');
+        const response = await fetch('https://bloomnetwork.online/EconInfo.json');
         econInfoData = await response.json();
     } catch (error) {
         console.error('Error fetching EconInfo data:', error);
@@ -220,7 +220,7 @@ async function fetchEconInfoData() {
 
 async function fetchAndPopulateSkins() {
     try {
-        const response = await fetch('http://localhost:2000/skins/get?steamid=<%= user.id %>');
+        const response = await fetch('https://api.bloomnetwork.online/skins/get?steamid=<%= user.id %>');
         const skinData = await response.json();
 
         for (const type in skinData) {
@@ -271,7 +271,7 @@ $("#updateSkins").click(function () {
             selectedSkins[type] = skin.itemdefid;
         }
     }
-    fetch('http://localhost:2000/skins/set', {
+    fetch('https://api.bloomnetwork.online/skins/set', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
