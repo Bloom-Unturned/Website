@@ -106,11 +106,10 @@
 </div>
 <script>
 $(document).ready(function () {
-    // Show loading spinner
     $("#loading-spinner").show();
 
     var dataTable = $('#myTable').DataTable({
-    // Your DataTable initialization settings
+
     responsive: true,
     columns: [
         {
@@ -122,7 +121,7 @@ $(document).ready(function () {
             }
         },
         { 
-            data: 'Name', // Assuming 'Name' corresponds to 'Buildable'
+            data: 'Name', 
             title: 'Buildable',
             render: function(data, type, row) {
               
@@ -138,14 +137,13 @@ $(document).ready(function () {
         },
         { data: 'GroupId', title: 'Group' },
         { 
-            data: 'InstigatorName', // Change 'Enemy' to 'InstigatorName'
+            data: 'InstigatorName', 
             title: 'Enemy',
             render: function(data, type, row) {
                 return '<a href="https://bloomnetwork.online/players/' + row.InstigatorId + '" target="_blank">' + row.InstigatorName + '</a>';
             }
         },
         { 
-            // Combine 'DamageOrigin' and 'DamageAmount' into 'Damage'
             data: null,
             title: 'Damage',
             render: function(data, type, row) {
@@ -162,13 +160,10 @@ $(document).ready(function () {
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            // Hide loading spinner
             $("#loading-spinner").hide();
 
-            // Show content
             $("#content").show();
 
-            // Populate DataTable with the fetched data
             dataTable.clear().rows.add(data.result).draw();
         },
         error: function (error) {
@@ -177,5 +172,3 @@ $(document).ready(function () {
     });
 });
 </script>
-
-	</script>

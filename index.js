@@ -78,25 +78,25 @@ const isAdmin = (req, res, next) => {
 */
 
 app.get('/admin', isAuthenticated, isAdmin, (req, res) => {
-  res.render('Layouts/index', { 
+  res.render('Layouts/Admin/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Admin/index.ejs') 
   });
 });
 
 app.get('/admin/players', isAuthenticated, isAdmin, (req, res) => {
-  res.render('Layouts/index', { 
+  res.render('Layouts/Admin/index', { 
     user: req.user, 
     content: path.join(__dirname, 'views/Admin/Players/index.ejs') 
   });
   
 });
 
-app.get('/admin/players:id', isAuthenticated, isAdmin, (req, res) => {
+app.get('/admin/players/:id', isAuthenticated, isAdmin, (req, res) => {
   const playerId = req.params.id;
-  res.render('Layouts/index', { 
+  res.render('Layouts/Admin/index', { 
     user: req.user, 
-    content: path.join(__dirname, 'views/Admin/Players/player.ejs') 
+    content: path.join(__dirname, 'views/Admin/Players/player.ejs'), playerId: playerId   
   });
   
 });

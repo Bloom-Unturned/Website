@@ -94,7 +94,7 @@
 
     
     <!-- Custom styles for this template -->
-    <link href="../../../offcanvas-navbar.css" rel="stylesheet">
+    <link href="/offcanvas-navbar.css" rel="stylesheet">
   </head>
   <body class="bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -173,7 +173,7 @@
           </ul>
         </li>
       </ul>
-      <% if(!user) {%>
+      <% if(typeof user == 'undefined') {%>
         <form class="d-flex" role="search">
           <a href="/auth/steam" class="btn btn-outline-primary" type="submit">Login</a>
         </form>
@@ -214,5 +214,5 @@
 </main>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="./../../../offcanvas-navbar.js"></script></body>
+    <script src="/offcanvas-navbar.js"></script></body>
 </html>

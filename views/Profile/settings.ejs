@@ -190,10 +190,7 @@
 
 <script>
   $(document).ready(function () {
-
-      $("#loading-spinner").show();
-
-
+$("#loading-spinner").show();
 let econInfoData;
 
 
@@ -337,6 +334,8 @@ $("#updateSkins").click(function () {
               console.error('Error fetching data:', error);
           }
       });
+
+      $("#loading-spinner").hide();
 
       $("#updateDiscord").click(function () {
           var discordId = $("#discordIdInput").val();

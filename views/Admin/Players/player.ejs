@@ -58,10 +58,8 @@
 </head>
 <body>
 
-  <div class="container-fluid mt-10">
-    <!-- Player Information Card -->
+  <div class="container-fluid">
     
-
 
      <div id="neverjoined" style="display: none" class="alert alert-warning" role="alert">
         <h4 class="alert-heading">This Player has never joined!</h4>
@@ -71,7 +69,7 @@
         <h4 class="alert-heading">This Player is cheating!</h4>
         <p class="mb-0">He was found cheating and banned on </p><p id="wherecheating" class="mb-0">  </p>
       </div>
-    <div class="card player-info-card" style="margin-bottom: 10px;">
+    <div class="card player-info-card" style="margin-bottom: 10px; margin-top: 20px;">
       <div class="card-header">
         <h5 class="card-title"><a id="link" href="https://steamcommunity.com/profiles/<%= playerId %>" target="_blank">Hath</a></h5>
       </div>
@@ -83,7 +81,7 @@
             </div>
           </div>
           <!-- Player Data Table -->
-          <div class="col-md-8">
+          <div class="col-md-9">
             <table class="table table-borderless table-striped">
               <tr>
                 <td><b>SteamID</b></td>
@@ -118,6 +116,82 @@
         </div>
       </div>
     </div>
+    <div class="row mb-3">
+      <div class="col">
+          <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#banModal">Ban</button>
+          <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#kickModal">Kick</button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#muteModal">Mute</button>
+      </div>
+  </div>
+  
+
+
+<!-- Ban Modal -->
+<div class="modal fade" id="banModal" tabindex="-1" role="dialog" aria-labelledby="banModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="banModalLabel">Ban Modal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                  <label for="steamIdBan">SteamID:</label>
+                  <input type="text" class="form-control" id="steamIdBan" value="123" disabled>
+              </div>
+              Ban content goes here.
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Kick Modal -->
+<div class="modal fade" id="kickModal" tabindex="-1" role="dialog" aria-labelledby="kickModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="kickModalLabel">Kick Modal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                  <label for="steamIdKick">SteamID:</label>
+                  <input type="text" class="form-control" id="steamIdKick" value="123" disabled>
+              </div>
+              Kick content goes here.
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Mute Modal -->
+<div class="modal fade" id="muteModal" tabindex="-1" role="dialog" aria-labelledby="muteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="muteModalLabel">Mute Modal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                  <label for="steamIdMute">SteamID:</label>
+                  <input type="text" class="form-control" id="steamIdMute" value="123" disabled>
+              </div>
+              Mute content goes here.
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+  
     <div class="row">
         <div class="col-md-4">
 

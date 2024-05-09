@@ -2,7 +2,6 @@
 <html lang="en" data-bs-theme="auto">
   <head><script src="/assets/js/color-modes.js"></script>
     <title>Bloom network</title>
-    <link rel="icon" type="image/x-icon" href="favicon.jpg" />
     <meta content="Bloom network" property="og:title" />
     <meta content="Log in to see more." property="og:description" />
     <meta content="https://embed.com/this-is-the-site-url" property="og:url" />
@@ -12,7 +11,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/offcanvas-navbar/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
     <style>
       .bd-placeholder-img {
@@ -21,9 +20,6 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
-      }
-      .container-fluid {
-        padding-top: calc(var(--bs-gutter-x) * .5)
       }
 
       @media (min-width: 768px) {
@@ -155,7 +151,7 @@
     
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand" href="/">Bloom Network</a>
+    <a class="navbar-brand" href="#">Bloom Network</a>
     <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -189,9 +185,6 @@
             <img src="<%= user.photos[0].value%>" alt="user" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small">
-            <% if(user.isAdmin) {%>
-            <li><a class="dropdown-item" href="/admin">Admin Dashboard</a></li>
-            <% }%>
             <li><a class="dropdown-item" href="/Profile">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/auth/logout">Sign out</a></li>
@@ -202,12 +195,28 @@
   </div>
 </nav>
 
+<div class="nav-scroller bg-body shadow-sm">
+  <nav class="nav container" aria-label="Secondary navigation">
+    <a class="nav-link" href="/admin/">Overview</a>
+    <a class="nav-link " href="/admin/players">Players</a>
+    <a class="nav-link" href="/admin/logs">
+      Logs
+      <span class="badge badge-danger text-bg-light rounded-pill align-text-bottom">0</span>
+    </a>
+    <a class="nav-link" href="/admin/reports">Reports</a>
+    <a class="nav-link" href="/admin/settings">Settings</a>
+    <a class="nav-link" href="/admin/Messages">Messages</a>
+    <a class="nav-link" href="/admin/analytics">Analytics</a>
+  </nav>
+</div>
+
 <main class="flex-shrink-0">
   <div class="container">
     <%- include(content) %>
   </div>
 </main>
 <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <script src="/offcanvas-navbar.js"></script></body>
 </html>
